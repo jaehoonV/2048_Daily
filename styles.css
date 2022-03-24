@@ -3,9 +3,43 @@
    font-family: Arial;
 }
 
+#score-amount {
+   transition: transform 100ms ease-in-out;
+   font-size: max(3vmin, 15px);
+   font-weight: bold;
+   text-align: center;
+}
+
+.score-box {
+   position: relative;
+}
+
+.score-label {
+   font-size: max(2vmin, 10px);
+   color: #AAA;
+   text-align: center;
+   line-height: 1.2;
+}
+
+.score-container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.header {
+   display: flex;
+   padding-bottom: 1vmin;
+   margin-top: 2.5vmin;
+   border-bottom: 1px solid #ccc;
+   align-items: center;
+   color: #ccc;
+}
+
 body {
    background-color: #333;
    display: flex;
+   flex-direction: column;
    justify-content: center;
    align-items: center;
    height: 100vh;
@@ -22,6 +56,7 @@ body {
    border-radius: 1vmin;
    padding: var(--cell-gap);
    position: relative;
+   margin-top: 2vmin;
 }
 
 .cell {

@@ -1,6 +1,7 @@
 const GRID_SIZE = 4
 const CELL_SIZE = 20
 const CELL_GAP = 2
+var score = 0;
 
 export default class Grid {
    #cells
@@ -101,6 +102,8 @@ class Cell {
    mergeTiles() {
       if (this.tile == null || this.mergeTile == null) return
       this.tile.value = this.tile.value + this.mergeTile.value
+      score += this.tile.value
+      document.getElementById("score-amount").innerHTML = score;
       this.mergeTile.remove()
       this.mergeTile = null
    }
