@@ -57,7 +57,7 @@ async function handleInput(e) {
    /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
       newTile.waitForTransition(true).then(() => {
-         alert("You lose")
+         alert("Your score : " + document.getElementById("score-amount").innerHTML)
       })
       return
    }
