@@ -1,7 +1,23 @@
 import Grid from "./Grid.js"
 import Tile from "./Tile.js"
 
+$(document).ready(function () {
+   $('.hover').hover(function () {
+      $(this).addClass('flip');
+   }, function () {
+      $(this).removeClass('flip');
+   });
+
+   $('.retry_btn').click(function () {
+      location.reload();
+   });
+});
+
+
+
 const gameBoard = document.getElementById("game-board")
+
+const score1 = document.getElementById('score1');
 
 const grid = new Grid(gameBoard)
 /* 임의의 빈 셀을 생성, 해당 타일을 새 타일로 설정*/
@@ -57,7 +73,8 @@ async function handleInput(e) {
    /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
    if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
       newTile.waitForTransition(true).then(() => {
-         alert("Your score : " + document.getElementById("score-amount").innerHTML)
+         score1.innerText = document.getElementById("score-amount").innerHTML;
+         document.getElementsByClassName("col_third")[0].style.display = "inline";
       })
       return
    }
@@ -136,4 +153,54 @@ function canMove(cells) {
          return moveToCell.canAccept(cell.tile)
       })
    })
+}
+
+window.onload = function () {
+   /* 터치 event */
+   let img = document.getElementById("game-board");
+
+   let m = new Hammer.Manager(img);
+
+   let key_up = jQuery.Event("keydown");
+   let key_down = jQuery.Event("keydown");
+   let key_left = jQuery.Event("keydown");
+   let key_right = jQuery.Event("keydown");
+
+   key_up.which = 38;
+   key_down.which = 40;
+   key_left.which = 37;
+   key_right.which = 39;
+
+   m.add(new Hammer.Pan({ threshold: 0 }));
+
+   m.on('pan', function (e) {
+      if (e.deltaX < -30) {
+         if (!canMoveLeft()) {
+            setupInput();
+            return
+         }
+         moveLeft();
+      } else if (e.deltaX > 30) {
+         if (!canMoveRight()) {
+            setupInput()
+            return
+         }
+         moveRight()
+      }
+
+      if (e.deltaY < -30) {
+         if (!canMoveUp()) {
+            setupInput()
+            return
+         }
+         moveUp()
+      } else if (e.deltaY > 30) {
+         if (!canMoveDown()) {
+            setupInput()
+            return
+         }
+         moveDown()
+      }
+   });
+   /* 터치 event */
 }
