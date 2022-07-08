@@ -13,6 +13,111 @@ $(document).ready(function () {
    });
 });
 
+/* 터치 event */
+let img = document.getElementById("game-board");
+
+let m = new Hammer.Manager(img);
+
+m.add(new Hammer.Pan({ threshold: 0 }));
+
+m.on('pan', function (e) {
+   if (e.deltaX < -30) {
+      if (!canMoveLeft()) {
+         setupInput();
+         return
+      }
+      moveLeft();
+
+      grid.cells.forEach(cell => cell.mergeTiles())
+
+      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
+      const newTile = new Tile(gameBoard)
+      grid.randomEmptyCell().tile = newTile
+
+      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
+      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+         newTile.waitForTransition(true).then(() => {
+            score1.innerText = document.getElementById("score-amount").innerHTML;
+            document.getElementsByClassName("col_third")[0].style.display = "inline";
+         })
+         return
+      }
+
+      setupInput()
+   } else if (e.deltaX > 30) {
+      if (!canMoveRight()) {
+         setupInput()
+         return
+      }
+      moveRight()
+
+      grid.cells.forEach(cell => cell.mergeTiles())
+
+      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
+      const newTile = new Tile(gameBoard)
+      grid.randomEmptyCell().tile = newTile
+
+      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
+      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+         newTile.waitForTransition(true).then(() => {
+            score1.innerText = document.getElementById("score-amount").innerHTML;
+            document.getElementsByClassName("col_third")[0].style.display = "inline";
+         })
+         return
+      }
+
+      setupInput()
+   }
+
+   if (e.deltaY < -30) {
+      if (!canMoveUp()) {
+         setupInput()
+         return
+      }
+      moveUp()
+
+      grid.cells.forEach(cell => cell.mergeTiles())
+
+      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
+      const newTile = new Tile(gameBoard)
+      grid.randomEmptyCell().tile = newTile
+
+      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
+      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+         newTile.waitForTransition(true).then(() => {
+            score1.innerText = document.getElementById("score-amount").innerHTML;
+            document.getElementsByClassName("col_third")[0].style.display = "inline";
+         })
+         return
+      }
+
+      setupInput()
+   } else if (e.deltaY > 30) {
+      if (!canMoveDown()) {
+         setupInput()
+         return
+      }
+      moveDown()
+
+      grid.cells.forEach(cell => cell.mergeTiles())
+
+      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
+      const newTile = new Tile(gameBoard)
+      grid.randomEmptyCell().tile = newTile
+
+      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
+      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+         newTile.waitForTransition(true).then(() => {
+            score1.innerText = document.getElementById("score-amount").innerHTML;
+            document.getElementsByClassName("col_third")[0].style.display = "inline";
+         })
+         return
+      }
+
+      setupInput()
+   }
+});
+/* 터치 event */
 
 
 const gameBoard = document.getElementById("game-board")
@@ -30,6 +135,7 @@ function setupInput() {
 }
 
 async function handleInput(e) {
+   alert(e.key);
    switch (e.key) {
       case "ArrowUp":
          if (!canMoveUp()) {
@@ -153,54 +259,4 @@ function canMove(cells) {
          return moveToCell.canAccept(cell.tile)
       })
    })
-}
-
-window.onload = function () {
-   /* 터치 event */
-   let img = document.getElementById("game-board");
-
-   let m = new Hammer.Manager(img);
-
-   let key_up = jQuery.Event("keydown");
-   let key_down = jQuery.Event("keydown");
-   let key_left = jQuery.Event("keydown");
-   let key_right = jQuery.Event("keydown");
-
-   key_up.which = 38;
-   key_down.which = 40;
-   key_left.which = 37;
-   key_right.which = 39;
-
-   m.add(new Hammer.Pan({ threshold: 0 }));
-
-   m.on('pan', function (e) {
-      if (e.deltaX < -30) {
-         if (!canMoveLeft()) {
-            setupInput();
-            return
-         }
-         moveLeft();
-      } else if (e.deltaX > 30) {
-         if (!canMoveRight()) {
-            setupInput()
-            return
-         }
-         moveRight()
-      }
-
-      if (e.deltaY < -30) {
-         if (!canMoveUp()) {
-            setupInput()
-            return
-         }
-         moveUp()
-      } else if (e.deltaY > 30) {
-         if (!canMoveDown()) {
-            setupInput()
-            return
-         }
-         moveDown()
-      }
-   });
-   /* 터치 event */
 }
