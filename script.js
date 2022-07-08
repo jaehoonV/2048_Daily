@@ -13,113 +13,6 @@ $(document).ready(function () {
    });
 });
 
-/* 터치 event */
-let img = document.getElementById("game-board");
-
-let m = new Hammer.Manager(img);
-
-m.add(new Hammer.Pan({ threshold: 0 }));
-
-m.on('pan', function (e) {
-   if (e.deltaX < -30 && e.deltaX < e.deltaY) {
-      if (!canMoveLeft()) {
-         setupInput();
-         return
-      }
-      moveLeft();
-
-      grid.cells.forEach(cell => cell.mergeTiles())
-
-      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
-      const newTile = new Tile(gameBoard)
-      grid.randomEmptyCell().tile = newTile
-
-      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
-      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
-         newTile.waitForTransition(true).then(() => {
-            score1.innerText = document.getElementById("score-amount").innerHTML;
-            document.getElementsByClassName("col_third")[0].style.display = "inline";
-         })
-         return
-      }
-
-      setupInput()
-   } else if (e.deltaX > 30 && e.deltaX > e.deltaY) {
-      if (!canMoveRight()) {
-         setupInput()
-         return
-      }
-      moveRight()
-
-      grid.cells.forEach(cell => cell.mergeTiles())
-
-      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
-      const newTile = new Tile(gameBoard)
-      grid.randomEmptyCell().tile = newTile
-
-      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
-      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
-         newTile.waitForTransition(true).then(() => {
-            score1.innerText = document.getElementById("score-amount").innerHTML;
-            document.getElementsByClassName("col_third")[0].style.display = "inline";
-         })
-         return
-      }
-
-      setupInput()
-   }
-
-   if (e.deltaY < -30 && e.deltaX > e.deltaY) {
-      if (!canMoveUp()) {
-         setupInput()
-         return
-      }
-      moveUp()
-
-      grid.cells.forEach(cell => cell.mergeTiles())
-
-      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
-      const newTile = new Tile(gameBoard)
-      grid.randomEmptyCell().tile = newTile
-
-      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
-      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
-         newTile.waitForTransition(true).then(() => {
-            score1.innerText = document.getElementById("score-amount").innerHTML;
-            document.getElementsByClassName("col_third")[0].style.display = "inline";
-         })
-         return
-      }
-
-      setupInput()
-   } else if (e.deltaY > 30 && e.deltaX < e.deltaY) {
-      if (!canMoveDown()) {
-         setupInput()
-         return
-      }
-      moveDown()
-
-      grid.cells.forEach(cell => cell.mergeTiles())
-
-      /* 모든 움직임에 새로운 랜덤 타일을 추가 */
-      const newTile = new Tile(gameBoard)
-      grid.randomEmptyCell().tile = newTile
-
-      /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
-      if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
-         newTile.waitForTransition(true).then(() => {
-            score1.innerText = document.getElementById("score-amount").innerHTML;
-            document.getElementsByClassName("col_third")[0].style.display = "inline";
-         })
-         return
-      }
-
-      setupInput()
-   }
-});
-/* 터치 event */
-
-
 const gameBoard = document.getElementById("game-board")
 
 const score1 = document.getElementById('score1');
@@ -259,3 +152,65 @@ function canMove(cells) {
       })
    })
 }
+
+/* 터치 event */
+let img = document.getElementById("game-board");
+
+let m = new Hammer.Manager(img);
+
+m.add(new Hammer.Pan({ threshold: 0 }));
+
+m.on("panleft panright panup pandown", function (ev) {
+
+   switch (ev.type) {
+      case "panup":
+         if (!canMoveUp()) {
+            setupInput()
+            return
+         }
+         moveUp()
+         break;
+
+      case "pandown":
+         if (!canMoveDown()) {
+            setupInput()
+            return
+         }
+         moveDown()
+         break;
+
+      case "panleft":
+         if (!canMoveLeft()) {
+            setupInput();
+            return
+         }
+         moveLeft();
+         break;
+
+      case "panright":
+         if (!canMoveRight()) {
+            setupInput()
+            return
+         }
+         moveRight()
+         break;
+   }
+   grid.cells.forEach(cell => cell.mergeTiles())
+
+   /* 모든 움직임에 새로운 랜덤 타일을 추가 */
+   const newTile = new Tile(gameBoard)
+   grid.randomEmptyCell().tile = newTile
+
+   /* 게임 종료 (위, 아래, 왼쪽, 오른쪽 모두 움직일 수 없을 경우) */
+   if (!canMoveUp() && !canMoveDown() && !canMoveLeft() && !canMoveRight()) {
+      newTile.waitForTransition(true).then(() => {
+         score1.innerText = document.getElementById("score-amount").innerHTML;
+         document.getElementsByClassName("col_third")[0].style.display = "inline";
+      })
+      return
+   }
+
+   setupInput()
+});
+
+/* 터치 event */
