@@ -21,7 +21,7 @@ let m = new Hammer.Manager(img);
 m.add(new Hammer.Pan({ threshold: 0 }));
 
 m.on('pan', function (e) {
-   if (e.deltaX < -30) {
+   if (e.deltaX < -30 && e.deltaX < e.deltaY) {
       if (!canMoveLeft()) {
          setupInput();
          return
@@ -44,7 +44,7 @@ m.on('pan', function (e) {
       }
 
       setupInput()
-   } else if (e.deltaX > 30) {
+   } else if (e.deltaX > 30 && e.deltaX > e.deltaY) {
       if (!canMoveRight()) {
          setupInput()
          return
@@ -69,7 +69,7 @@ m.on('pan', function (e) {
       setupInput()
    }
 
-   if (e.deltaY < -30) {
+   if (e.deltaY < -30 && e.deltaX > e.deltaY) {
       if (!canMoveUp()) {
          setupInput()
          return
@@ -92,7 +92,7 @@ m.on('pan', function (e) {
       }
 
       setupInput()
-   } else if (e.deltaY > 30) {
+   } else if (e.deltaY > 30 && e.deltaX < e.deltaY) {
       if (!canMoveDown()) {
          setupInput()
          return
@@ -135,7 +135,6 @@ function setupInput() {
 }
 
 async function handleInput(e) {
-   alert(e.key);
    switch (e.key) {
       case "ArrowUp":
          if (!canMoveUp()) {
